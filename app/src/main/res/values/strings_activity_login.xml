@@ -1,0 +1,15 @@
+<resources>
+        <string name="title_activity_login">Sign In</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_username">USUARIO</string>
+    <string name="prompt_password">CONTRASEÑA</string>
+    <string name="action_sign_in">CONTINUAR</string>
+    <string name="action_sign_in_short">FTBSports</string>
+
+    <string name="error_invalid_username">El nombre de usuario es inválido</string>
+    <string name="error_invalid_password">La contraseña es demasiado corta</string>
+    <string name="error_incorrect_password">La contraseña es incorrecta</string>
+    <string name="error_field_required">No se puede dejar vacío el campo</string>
+    <string name="imageDescription">From The Bench Logo</string>
+</resources>
