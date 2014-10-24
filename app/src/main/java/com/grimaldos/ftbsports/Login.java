@@ -5,35 +5,24 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.LoaderManager.LoaderCallbacks;
-import android.content.ContentResolver;
-import android.content.CursorLoader;
-import android.content.Loader;
+import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
-import android.os.Build.VERSION;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,8 +33,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -97,22 +84,25 @@ public class Login extends Activity {
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String mUsername = settings.getString("username", null);
-        if(mUsername == null) {
+        /*
+        if (mUsername == null) {
             Log.d("USER", "null");
         } else {
             Log.d("USER", mUsername);
         }
+        */
         String mPassword = settings.getString("password", null);
-        if(mPassword == null) {
+        /*
+        if (mPassword == null) {
             Log.d("PASSWORD", "null");
         } else {
             Log.d("PASSWORD", mPassword);
         }
-
-        if(mUsername != null && mPassword != null) {
-            showProgress(true);
-            mAuthTask = new UserLoginTask(mUsername, mPassword);
-            mAuthTask.execute((Void) null);
+        */
+        if (mUsername != null && mPassword != null) {
+            mUsernameView.setText(mUsername);
+            mPasswordView.setText(mPassword);
+            attemptLogin();
         }
     }
 
@@ -138,28 +128,34 @@ public class Login extends Activity {
         View focusView = null;
 
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
+        // Check if the user entered a password.
+        if (!TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_field_required));
             focusView = mPasswordView;
             cancel = true;
         }
 
-        // Check for a valid username address.
+        // Check for a valid username.
         if (TextUtils.isEmpty(username)) {
             mUsernameView.setError(getString(R.string.error_field_required));
             focusView = mUsernameView;
             cancel = true;
-        } else if (!isUsernameValid(username)) {
-            mUsernameView.setError(getString(R.string.error_invalid_username));
-            focusView = mUsernameView;
+        }
+
+        // Check Internet connection.
+        ConnectivityManager conMgr = (ConnectivityManager) Login.this.
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (!CheckConnection.checkConnection(conMgr)) {
+            // If Internet connection is not working cancel login
+            showCustomDialog("Server unreachable. Check your internet connection and try again.");
             cancel = true;
         }
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
+            // form field with an error if exists.
+            if (focusView != null)
+                focusView.requestFocus();
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
@@ -167,17 +163,6 @@ public class Login extends Activity {
             mAuthTask = new UserLoginTask(username, password);
             mAuthTask.execute((Void) null);
         }
-    }
-    private boolean isUsernameValid(String username) {
-        //TODO: Replace this with your own logic
-        //return username.contains("@");
-        return true;
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        //return password.length() > 4;
-        return true;
     }
 
     /**
@@ -259,11 +244,13 @@ public class Login extends Activity {
 
                 String status = jObj.getString("status");
 
-                if(status.equals("-1")) {
+                if(status.equals("0")) {
+                    return true;
+                } else if (status.equals("-1")) {
                     errorMessage = jObj.getString("message");
                     Log.d("Status:" + status, errorMessage);
                     return false;
-                } else if(status.equals("-2")) {
+                } else if (status.equals("-2")) {
                     errorMessage = "Error desconocido, por favor inténtelo de nuevo.";
                     Log.d("Status:" + status, errorMessage);
                     return false;
@@ -294,28 +281,10 @@ public class Login extends Activity {
                 editor.putString("username", mUsername);
                 Log.d("STORE PASSWORD", mPassword);
                 editor.putString("password", mPassword);
-                editor.commit();
+                editor.apply();
                 finish();
             } else {
-                //mPasswordView.setError(getString(R.string.error_incorrect_password));
-                //mPasswordView.requestFocus();
-                final Dialog dialog = new Dialog(Login.this, R.style.WalletFragmentDefaultButtonTextAppearance);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setCancelable(false);
-                dialog.setContentView(R.layout.error_dialog);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0x66000000));
-                TextView errorText = (TextView) dialog.findViewById(R.id.errorText);
-                errorText.setText(errorMessage);
-
-                Button okButton = (Button) dialog.findViewById(R.id.errorButton);
-                okButton.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-
-                dialog.show();
+                showCustomDialog(errorMessage);
             }
         }
 
@@ -324,5 +293,25 @@ public class Login extends Activity {
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+    private void showCustomDialog(String message) {
+        final Dialog dialog = new Dialog(Login.this, R.style.Theme_AppCompat_DialogWhenLarge);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.error_dialog);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0x66000000));
+        TextView errorText = (TextView) dialog.findViewById(R.id.errorText);
+        errorText.setText(message);
+
+        Button okButton = (Button) dialog.findViewById(R.id.errorButton);
+        okButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }
