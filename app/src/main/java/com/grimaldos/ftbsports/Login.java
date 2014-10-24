@@ -5,7 +5,10 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
@@ -45,6 +48,8 @@ public class Login extends Activity {
      */
     private UserLoginTask mAuthTask = null;
 
+    private BroadcastReceiver netBroadcastReceiver;
+
     // UI references.
     private EditText mUsernameView;
     private EditText mPasswordView;
@@ -55,6 +60,17 @@ public class Login extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // When network state changes, if it just connected to the Internet download images
+        netBroadcastReceiver = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                if (isConnected()) {
+                    Intent downloadImages = new Intent(Login.this, DownloadService.class);
+                    startService(downloadImages);
+                }
+            }
+        };
+        registerReceiver(netBroadcastReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
 
         // Set up the login form.
         mUsernameView = (EditText) findViewById(R.id.username);
@@ -84,26 +100,18 @@ public class Login extends Activity {
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String mUsername = settings.getString("username", null);
-        /*
-        if (mUsername == null) {
-            Log.d("USER", "null");
-        } else {
-            Log.d("USER", mUsername);
-        }
-        */
         String mPassword = settings.getString("password", null);
-        /*
-        if (mPassword == null) {
-            Log.d("PASSWORD", "null");
-        } else {
-            Log.d("PASSWORD", mPassword);
-        }
-        */
         if (mUsername != null && mPassword != null) {
             mUsernameView.setText(mUsername);
             mPasswordView.setText(mPassword);
             attemptLogin();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(netBroadcastReceiver);
+        super.onDestroy();
     }
 
     /**
@@ -129,13 +137,13 @@ public class Login extends Activity {
 
 
         // Check if the user entered a password.
-        if (!TextUtils.isEmpty(password)) {
+        if (TextUtils.isEmpty(password)) {
             mPasswordView.setError(getString(R.string.error_field_required));
             focusView = mPasswordView;
             cancel = true;
         }
 
-        // Check for a valid username.
+        // Check if the user entered a username.
         if (TextUtils.isEmpty(username)) {
             mUsernameView.setError(getString(R.string.error_field_required));
             focusView = mUsernameView;
@@ -143,11 +151,10 @@ public class Login extends Activity {
         }
 
         // Check Internet connection.
-        ConnectivityManager conMgr = (ConnectivityManager) Login.this.
-                getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (!CheckConnection.checkConnection(conMgr)) {
+        if (!isConnected()) {
             // If Internet connection is not working cancel login
-            showCustomDialog("Server unreachable. Check your internet connection and try again.");
+            showCustomDialog("No se pudo conectar con el servidor. Compruebe su conexión a " +
+                    "internet e inténtelo de nuevo.");
             cancel = true;
         }
 
@@ -218,8 +225,6 @@ public class Login extends Activity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
             try {
                 URL authURL = new URL("http://ftbsports.com/android/api/login.php?user="
                         + mUsername + "&password=" + mPassword);
@@ -244,7 +249,7 @@ public class Login extends Activity {
 
                 String status = jObj.getString("status");
 
-                if(status.equals("0")) {
+                if (status.equals("0")) {
                     return true;
                 } else if (status.equals("-1")) {
                     errorMessage = jObj.getString("message");
@@ -255,7 +260,6 @@ public class Login extends Activity {
                     Log.d("Status:" + status, errorMessage);
                     return false;
                 }
-
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -263,8 +267,6 @@ public class Login extends Activity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-            // TODO: register the new account here.
             return true;
         }
 
@@ -295,6 +297,10 @@ public class Login extends Activity {
         }
     }
 
+    /**
+     * Shows a customized dialog with the message passed by parameter.
+     * @param message String to show in the dialog.
+     */
     private void showCustomDialog(String message) {
         final Dialog dialog = new Dialog(Login.this, R.style.Theme_AppCompat_DialogWhenLarge);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -313,5 +319,16 @@ public class Login extends Activity {
         });
 
         dialog.show();
+    }
+
+    /**
+     * Checks whether the device is connected to the Internet or not.
+     * @return True if it is connected, false otherwise.
+     */
+    private boolean isConnected() {
+        // Check Internet connection.
+        ConnectivityManager conMgr = (ConnectivityManager) Login.this.
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        return CheckConnection.checkConnection(conMgr);
     }
 }
