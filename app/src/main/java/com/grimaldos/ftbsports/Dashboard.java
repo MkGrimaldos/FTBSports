@@ -1,9 +1,11 @@
 package com.grimaldos.ftbsports;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -51,5 +53,10 @@ public class Dashboard extends ActionBarActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void aboutMe(View v) {
+        Intent about = new Intent(Dashboard.this, AboutMe.class);
+        startActivity(about);
     }
 }

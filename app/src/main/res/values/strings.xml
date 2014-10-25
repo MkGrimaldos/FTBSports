@@ -10,5 +10,9 @@
     <string name="pro_con">PRO/CON</string>
     <string name="vaciar_cache">VACIAR CACHÉ</string>
     <string name="cerrar_sesion">CERRAR SESIÓN</string>
+    <string name="title_activity_about_me">AboutMe</string>
+    <string name="logo_description">From The Bench</string>
+    <string name="light_description">Foco</string>
+    <string name="profile_description">Imagen de Perfil</string>
 
 </resources>

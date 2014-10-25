@@ -30,6 +30,14 @@
             android:name=".Dashboard"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name=".AboutMe"
+            android:label="@string/title_activity_about_me"
+            android:parentActivityName=".Dashboard" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.grimaldos.ftbsports.Dashboard" />
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />

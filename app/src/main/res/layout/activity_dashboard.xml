@@ -5,91 +5,105 @@
     android:layout_height="match_parent"
     tools:context="com.grimaldos.ftbsports.Dashboard">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/izqImageView"
-        android:src="@drawable/lateral_izq" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/derImageView"
-        android:src="@drawable/lateral_der" />
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/scrollView" >
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:paddingBottom="@dimen/activity_vertical_margin">
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:id="@+id/logoImageView"
-                android:src="@drawable/logo_ftb"
-                android:layout_centerHorizontal="true" />
+                android:id="@+id/izqImageView"
+                android:src="@drawable/lateral_izq"
+                android:contentDescription="@string/light_description" />
 
-            <Button
-                android:background="@drawable/button_acercademi"
-                android:id="@+id/aboutMeButton"
-                android:layout_height="50dp"
-                android:layout_width="225dp"
-                android:paddingRight="40dp"
-                android:text="@string/acerca_de_mi"
-                android:textColor="#ffffffff"
-                android:textStyle="bold"
-                android:layout_below="@+id/logoImageView"
-                android:layout_marginBottom="8dp"
-                android:layout_centerHorizontal="true" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/derImageView"
+                android:src="@drawable/lateral_der"
+                android:contentDescription="@string/light_description" />
 
-            <Button
-                android:background="@drawable/button_procon"
-                android:id="@+id/proConButton"
-                android:layout_height="50dp"
-                android:layout_width="225dp"
-                android:layout_below="@+id/aboutMeButton"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="8dp"
-                android:paddingRight="40dp"
-                android:text="@string/pro_con"
-                android:textColor="#ffffffff"
-                android:textStyle="bold" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin">
 
-            <Button
-                android:background="@drawable/button_cache"
-                android:layout_height="50dp"
-                android:layout_width="225dp"
-                android:text="@string/vaciar_cache"
-                android:id="@+id/cacheButton"
-                android:layout_below="@+id/proConButton"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="8dp"
-                android:paddingRight="40dp"
-                android:textColor="#ffffffff"
-                android:textStyle="bold" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:id="@+id/logoImageView"
+                    android:src="@drawable/logo_ftb"
+                    android:layout_centerHorizontal="true"
+                    android:contentDescription="@string/logo_description" />
 
-            <Button
-                android:background="@drawable/button_cerrarsesion"
-                android:layout_height="50dp"
-                android:layout_width="225dp"
-                android:text="@string/cerrar_sesion"
-                android:id="@+id/cerrarSesionButton"
-                android:paddingRight="40dp"
-                android:textColor="#ffffffff"
-                android:textStyle="bold"
-                android:layout_below="@id/cacheButton"
-                android:layout_centerHorizontal="true" />
+                <Button
+                    android:background="@drawable/button_acercademi"
+                    android:id="@+id/aboutMeButton"
+                    android:layout_height="50dp"
+                    android:layout_width="225dp"
+                    android:paddingRight="40dp"
+                    android:paddingEnd="40dp"
+                    android:text="@string/acerca_de_mi"
+                    android:textColor="#ffffffff"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/logoImageView"
+                    android:layout_marginBottom="8dp"
+                    android:layout_centerHorizontal="true"
+                    android:onClick="aboutMe" />
+
+                <Button
+                    android:background="@drawable/button_procon"
+                    android:id="@+id/proConButton"
+                    android:layout_height="50dp"
+                    android:layout_width="225dp"
+                    android:layout_below="@+id/aboutMeButton"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="8dp"
+                    android:paddingRight="40dp"
+                    android:paddingEnd="40dp"
+                    android:text="@string/pro_con"
+                    android:textColor="#ffffffff"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:background="@drawable/button_cache"
+                    android:layout_height="50dp"
+                    android:layout_width="225dp"
+                    android:text="@string/vaciar_cache"
+                    android:id="@+id/cacheButton"
+                    android:layout_below="@+id/proConButton"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="8dp"
+                    android:paddingRight="40dp"
+                    android:paddingEnd="40dp"
+                    android:textColor="#ffffffff"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:background="@drawable/button_cerrarsesion"
+                    android:layout_height="50dp"
+                    android:layout_width="225dp"
+                    android:text="@string/cerrar_sesion"
+                    android:id="@+id/cerrarSesionButton"
+                    android:paddingRight="40dp"
+                    android:paddingEnd="40dp"
+                    android:textColor="#ffffffff"
+                    android:textStyle="bold"
+                    android:layout_below="@id/cacheButton"
+                    android:layout_centerHorizontal="true" />
+
+            </RelativeLayout>
 
         </RelativeLayout>
     </ScrollView>
