@@ -39,6 +39,7 @@
                     android:src="@drawable/logo_ftb"
                     android:adjustViewBounds="true"
                     android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="0dp"
                     android:contentDescription="@string/imageDescription" />
@@ -57,6 +58,7 @@
                     android:textColorHint="#ff000000"
                     android:layout_below="@+id/imageView"
                     android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
                     android:layout_marginTop="20dp" />
 
                 <EditText
@@ -77,6 +79,7 @@
                     android:textColorHint="#ff000000"
                     android:layout_below="@+id/username"
                     android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
                     android:layout_marginTop="5dp" />
 
                 <Button
@@ -92,6 +95,7 @@
                     android:textColor="#ffffffff"
                     android:layout_below="@+id/password"
                     android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
                     android:layout_alignParentBottom="true"
                     android:layout_marginBottom="0dp"/>
 

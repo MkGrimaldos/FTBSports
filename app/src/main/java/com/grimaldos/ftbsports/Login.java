@@ -284,6 +284,8 @@ public class Login extends Activity {
                 Log.d("STORE PASSWORD", mPassword);
                 editor.putString("password", mPassword);
                 editor.apply();
+                Intent dashboard = new Intent(Login.this, Dashboard.class);
+                startActivity(dashboard);
                 finish();
             } else {
                 showCustomDialog(errorMessage);
