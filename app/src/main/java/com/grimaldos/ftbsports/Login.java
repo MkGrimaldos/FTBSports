@@ -136,9 +136,21 @@ public class Login extends Activity {
             cancel = true;
         }
 
+        if(password.contains(" ")) {
+            mPasswordView.setError(getString(R.string.error_invalid_character;
+            focusView = mPasswordView;
+            cancel = true;
+        }
+
         // Check if the user entered a username.
         if (TextUtils.isEmpty(username)) {
             mUsernameView.setError(getString(R.string.error_field_required));
+            focusView = mUsernameView;
+            cancel = true;
+        }
+
+        if(username.contains(" ")) {
+            mUsernameView.setError(getString(R.string.error_no_space));
             focusView = mUsernameView;
             cancel = true;
         }
@@ -207,6 +219,7 @@ public class Login extends Activity {
                 StringBuilder buffer = new StringBuilder();
                 String line = null;
                 while ((line = reader.readLine()) != null) {
+                    Log.d("RESPONSE", line);
                     buffer.append(line + "\n");
                 }
 
@@ -234,7 +247,8 @@ public class Login extends Activity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return true;
+            errorMessage = "Error desconocido, por favor inténtelo de nuevo.";
+            return false;
         }
 
         @Override

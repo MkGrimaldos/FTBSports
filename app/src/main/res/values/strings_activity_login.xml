@@ -11,5 +11,7 @@
     <string name="error_invalid_password">La contraseña es demasiado corta</string>
     <string name="error_incorrect_password">La contraseña es incorrecta</string>
     <string name="error_field_required">No se puede dejar vacío el campo</string>
+    <string name="error_no_space">No se pueden introducir espacios</string>
+    <string name="error_invalid_character">El campo contiene caracteres inválidos</string>
     <string name="imageDescription">From The Bench Logo</string>
 </resources>
