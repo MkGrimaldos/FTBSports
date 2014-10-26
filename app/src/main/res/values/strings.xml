@@ -14,5 +14,6 @@
     <string name="logo_description">From The Bench</string>
     <string name="light_description">Foco</string>
     <string name="profile_description">Imagen de Perfil</string>
+    <string name="spinner_description">Spinner</string>
 
 </resources>

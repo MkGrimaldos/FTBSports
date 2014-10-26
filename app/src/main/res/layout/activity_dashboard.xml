@@ -74,7 +74,8 @@
                     android:paddingEnd="40dp"
                     android:text="@string/pro_con"
                     android:textColor="#ffffffff"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:onClick="proCon" />
 
                 <Button
                     android:background="@drawable/button_cache"
@@ -88,7 +89,8 @@
                     android:paddingRight="40dp"
                     android:paddingEnd="40dp"
                     android:textColor="#ffffffff"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:onClick="vaciarCache" />
 
                 <Button
                     android:background="@drawable/button_cerrarsesion"
@@ -101,7 +103,8 @@
                     android:textColor="#ffffffff"
                     android:textStyle="bold"
                     android:layout_below="@id/cacheButton"
-                    android:layout_centerHorizontal="true" />
+                    android:layout_centerHorizontal="true"
+                    android:onClick="logout"/>
 
             </RelativeLayout>
 

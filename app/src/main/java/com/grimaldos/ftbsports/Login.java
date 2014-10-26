@@ -1,8 +1,5 @@
 package com.grimaldos.ftbsports;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -13,7 +10,6 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -48,13 +44,13 @@ public class Login extends Activity {
      */
     private UserLoginTask mAuthTask = null;
 
+    //static Dialog spinner;
+
     private BroadcastReceiver netBroadcastReceiver;
 
     // UI references.
     private EditText mUsernameView;
     private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,9 +90,6 @@ public class Login extends Activity {
                 attemptLogin();
             }
         });
-
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String mUsername = settings.getString("username", null);
@@ -164,47 +157,9 @@ public class Login extends Activity {
             if (focusView != null)
                 focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
+            // Kick off a background task to perform the user login attempt.
             mAuthTask = new UserLoginTask(username, password);
             mAuthTask.execute((Void) null);
-        }
-    }
-
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    public void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -217,10 +172,22 @@ public class Login extends Activity {
         private final String mUsername;
         private final String mPassword;
         private String errorMessage = "";
+        final Dialog spinner = new Dialog(Login.this, R.style.Theme_AppCompat_DialogWhenLarge);
 
         UserLoginTask(String username, String password) {
             mUsername = username;
             mPassword = password;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            // Set custom progress dialog.
+            spinner.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            spinner.setCancelable(false);
+            spinner.setContentView(R.layout.loading_dialog);
+            spinner.getWindow().setBackgroundDrawable(new ColorDrawable(0x66000000));
+
+            spinner.show();
         }
 
         @Override
@@ -237,7 +204,7 @@ public class Login extends Activity {
                 BufferedReader reader = new BufferedReader(new InputStreamReader
                         (connection.getInputStream()));
 
-                StringBuffer buffer = new StringBuffer();
+                StringBuilder buffer = new StringBuilder();
                 String line = null;
                 while ((line = reader.readLine()) != null) {
                     buffer.append(line + "\n");
@@ -273,7 +240,7 @@ public class Login extends Activity {
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-            showProgress(false);
+            spinner.dismiss();
 
             if (success) {
                 Log.d("AUTH SUCCESS", "Preparing to store info");
@@ -295,12 +262,13 @@ public class Login extends Activity {
         @Override
         protected void onCancelled() {
             mAuthTask = null;
-            showProgress(false);
+            spinner.dismiss();
         }
     }
 
     /**
      * Shows a customized dialog with the message passed by parameter.
+     *
      * @param message String to show in the dialog.
      */
     private void showCustomDialog(String message) {
@@ -325,6 +293,7 @@ public class Login extends Activity {
 
     /**
      * Checks whether the device is connected to the Internet or not.
+     *
      * @return True if it is connected, false otherwise.
      */
     private boolean isConnected() {
