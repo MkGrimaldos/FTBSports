@@ -2,16 +2,21 @@
         <string name="title_activity_login">Sign In</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_username">USUARIO</string>
-    <string name="prompt_password">CONTRASEÑA</string>
     <string name="action_sign_in">CONTINUAR</string>
     <string name="action_sign_in_short">FTBSports</string>
+    <string name="prompt_username">USUARIO</string>
+    <string name="prompt_password">CONTRASEÑA</string>
 
     <string name="error_invalid_username">El nombre de usuario es inválido</string>
     <string name="error_invalid_password">La contraseña es demasiado corta</string>
     <string name="error_incorrect_password">La contraseña es incorrecta</string>
     <string name="error_field_required">No se puede dejar vacío el campo</string>
     <string name="error_no_space">No se pueden introducir espacios</string>
-    <string name="error_invalid_character">El campo contiene caracteres inválidos</string>
+    <string name="error_password_invalid_character">La contraseña contiene caracteres inválidos</string>
+    <string name="error_password_long">La contraseña es demasiado larga</string>
+    <string name="error_password_short">La contraseña es demasiado corta</string>
+    <string name="error_username_invalid_character">El nombre de usuario contiene caracteres inválidos</string>
+    <string name="error_username_long">El nombre de usuario es demasiado largo</string>
+    <string name="error_username_short">El nombre de usuario es demasiado corto</string>
     <string name="imageDescription">From The Bench Logo</string>
 </resources>

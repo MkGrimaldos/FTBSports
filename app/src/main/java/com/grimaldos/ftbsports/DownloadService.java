@@ -56,30 +56,26 @@ public class DownloadService extends IntentService {
             } else {
                 Log.d("f.exists", "La carpeta ya existía");
             }
-            Log.d("File path", f.getAbsolutePath());
+            //Log.d("File path", f.getAbsolutePath());
         } else {
             // If external storage is not available, use internal storage.
             f = new File(this.getFilesDir().getPath());
-            Log.d("File path", f.getAbsolutePath());
+            //Log.d("File path", f.getAbsolutePath());
         }
 
         // Get files in the folder and count them.
         File[] files = f.listFiles();
         if (files != null) {
-            Log.d("Files length", Integer.toString(files.length));
-
             // Get the ".png" files and store their names.
             for (File file : files) {
                 Log.d("File", file.getName());
                 if (file.isFile() && file.getName().toLowerCase().endsWith(".png")) {
-                    Log.d("Image?", "Me intelesa");
+                    Log.d("Image?", "Indeed");
                     fNames.add(file.getName());
                 }
             }
             // Number of images stored
             count = fNames.size();
-        } else {
-            Log.d("Files", "NULL");
         }
 
         Log.d("Count", Integer.toString(count));
@@ -90,13 +86,7 @@ public class DownloadService extends IntentService {
         try {
             jsonObject.put("count", count);
             jsonObject.put("list", jsonArrayAux);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
-        Log.d("JSON", jsonObject.toString());
-
-        try {
             // Get JSON object from String
             String json = serverPetition(jsonObject);
             JSONObject jObj = new JSONObject(json);
@@ -118,7 +108,7 @@ public class DownloadService extends IntentService {
     }
 
     /**
-     * Performs a petition to a server, sending a JSON with information of
+     * Perform a petition to a server, sending a JSON with information of
      * the images stored in the device.
      * Also manages the answer from the server.
      *
@@ -126,7 +116,7 @@ public class DownloadService extends IntentService {
      * @return Answer from the server.
      */
     private String serverPetition(JSONObject jsonObject) {
-        // Connect and send petition
+        // Connect and send petition.
         try {
             URL imgURL = new URL("http://ftbsports.com/android/api/get_images_cache.php");
 
@@ -137,13 +127,13 @@ public class DownloadService extends IntentService {
             writer.flush();
             writer.close();
 
-            // Receive and process answer
+            // Receive and process answer.
             BufferedReader reader = new BufferedReader(new InputStreamReader
                     (connection.getInputStream()));
             StringBuilder builder = new StringBuilder();
-            String line = null;
+            String line;
             while ((line = reader.readLine()) != null) {
-                Log.d("JSON RESPONSE", line);
+                //Log.d("JSON RESPONSE", line);
                 builder.append(line + "\n");
             }
             return builder.toString();
@@ -156,7 +146,7 @@ public class DownloadService extends IntentService {
     }
 
     /**
-     * Downloads and stores an image from an url.
+     * Download and stores an image from an url.
      *
      * @param urlString Url where the image is downloaded from.
      * @param name      Name of the image to be downloaded.
@@ -193,7 +183,7 @@ public class DownloadService extends IntentService {
     }
 
     /**
-     * Requests the media scanner to scan a file.
+     * Request the media scanner to scan a file.
      *
      * @param path Location of the file to be scanned.
      */

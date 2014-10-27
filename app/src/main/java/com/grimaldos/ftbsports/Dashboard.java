@@ -21,10 +21,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
-
+/**
+ * Main menu of the app.
+ */
 public class Dashboard extends ActionBarActivity {
 
     @Override
@@ -69,19 +69,33 @@ public class Dashboard extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Start the AboutMe activity.
+     *
+     * @param v
+     */
     public void aboutMe(View v) {
         Intent about = new Intent(Dashboard.this, AboutMe.class);
         startActivity(about);
     }
 
+    /**
+     * Start the Producer/Consumer activity.
+     *
+     * @param v
+     */
     public void proCon(View v) {
         Intent prodCons = new Intent(Dashboard.this, ProCon.class);
         startActivity(prodCons);
     }
 
+    /**
+     * Destroy all the png files contained in the default folder.
+     *
+     * @param v
+     */
     public void vaciarCache(View v) {
         int count = 0;
-        List<String> fNames = new ArrayList<String>();
         File f;
         String message;
 
@@ -95,28 +109,24 @@ public class Dashboard extends ActionBarActivity {
             f = new File(this.getFilesDir().getPath());
         }
 
-        Log.d("File path", f.getAbsolutePath());
-
         // Get files in the folder and count them.
         File[] files = f.listFiles();
         if (files != null) {
-            Log.d("Files length", Integer.toString(files.length));
-
             // Get the ".png" files and delete them.
             for (File file : files) {
-                Log.d("File", file.getName());
                 if (file.isFile() && file.getName().toLowerCase().endsWith(".png")) {
-                    Log.d("Target Acquired", file.getName());
-                    if(new File(file.getAbsolutePath()).delete()) {
+                    Log.d("Destroying Image", file.getName());
+                    if (new File(file.getAbsolutePath()).delete()) {
                         scanFile(file.getAbsolutePath());
                         ++count;
-                        Log.d("Target", "DESTROYED");
+                        Log.d("Image", "DESTROYED");
                     } else {
-                        Log.d("Target", "MISSED");
+                        Log.d("Image", "MISSED");
                     }
                 }
             }
-            if(count > 0) {
+            // Show feedback to the user depending on the result.
+            if (count > 0) {
                 message = "Se eliminaron " + count + " imágenes correctamente.";
             } else {
                 message = "No se encontró ninguna imagen en la carpeta.";
@@ -129,6 +139,11 @@ public class Dashboard extends ActionBarActivity {
         showCustomDialog(message);
     }
 
+    /**
+     * Clear user information, start Login activity and finish this activity.
+     *
+     * @param v
+     */
     public void logout(View v) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = settings.edit();
@@ -136,13 +151,15 @@ public class Dashboard extends ActionBarActivity {
         editor.remove("password");
         editor.apply();
         Log.d("Logout", "Username and password cleared");
+
         Intent login = new Intent(Dashboard.this, Login.class);
         startActivity(login);
+
         finish();
     }
 
     /**
-     * Shows a customized dialog with the message passed by parameter.
+     * Show a customized dialog with the message passed by parameter.
      *
      * @param message String to show in the dialog.
      */
@@ -167,7 +184,7 @@ public class Dashboard extends ActionBarActivity {
     }
 
     /**
-     * Requests the media scanner to scan a file.
+     * Request the media scanner to scan a file.
      *
      * @param path Location of the file to be scanned.
      */
