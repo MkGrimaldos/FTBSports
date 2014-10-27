@@ -75,8 +75,8 @@ public class Dashboard extends ActionBarActivity {
     }
 
     public void proCon(View v) {
-        //Intent prodCons = new Intent(Dashboard.this, ProCon.class);
-        //startActivity(prodCons);
+        Intent prodCons = new Intent(Dashboard.this, ProCon.class);
+        startActivity(prodCons);
     }
 
     public void vaciarCache(View v) {

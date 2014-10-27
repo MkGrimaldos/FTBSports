@@ -33,6 +33,15 @@
         <activity
             android:name=".AboutMe"
             android:label="@string/title_activity_about_me"
+            android:parentActivityName=".Dashboard"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.grimaldos.ftbsports.Dashboard" />
+        </activity>
+        <activity
+            android:name=".ProCon"
+            android:label="@string/title_activity_pro_con"
             android:screenOrientation="portrait"
             android:parentActivityName=".Dashboard" >
             <meta-data

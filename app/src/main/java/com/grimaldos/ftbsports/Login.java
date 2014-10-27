@@ -137,7 +137,7 @@ public class Login extends Activity {
         }
 
         if(password.contains(" ")) {
-            mPasswordView.setError(getString(R.string.error_invalid_character;
+            mPasswordView.setError(getString(R.string.error_invalid_character));
             focusView = mPasswordView;
             cancel = true;
         }
